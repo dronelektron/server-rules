@@ -2,81 +2,81 @@
 {
     "Badwords"
     {
-        "en"    "No badwords"
+        "ru"    "Мат запрещен"
     }
 
     "Badwords (desc)"
     {
-        "en"    "Insults and bad words are punishable by a kick or ban"
+        "ru"    "Оскорбления и мат запрещены - кик, бан"
     }
 
     "Cheats"
     {
-        "en"    "No cheats"
+        "ru"    "Читы запрещены"
     }
 
     "Cheats (desc)"
     {
-        "en"    "Using bugs, glitches, exploits or cheats - ban"
+        "ru"    "Использование багов, глитчей, эксплойтов и читов - бан"
     }
 
     "Machine gun in front of respawn"
     {
-        "en"    "Do not put machine gun in front of respawn"
+        "ru"    "Пулемет против респауна не ставить"
     }
 
     "Machine gun in front of respawn (desc)"
     {
-        "en"    "In existing of one exit - ban"
+        "ru"    "При наличии одного выхода - бан"
     }
 
     "Grenades onto respawn"
     {
-        "en"    "Throwing grenades onto respawn is allowed"
+        "ru"    "Гранаты на респаун - можно"
     }
 
     "Grenades onto respawn (desc)"
     {
-        "en"    "Spawnkill also allowed"
+        "ru"    "Спаункил также разрешен"
     }
 
     "Deliberate teamkill"
     {
-        "en"    "Deliberate teamkill is forbidden"
+        "ru"    "Преднамеренный тимкил запрещен"
     }
 
     "Deliberate teamkill (desc)"
     {
-        "en"    "Killing a teammate without a reason - ban"
+        "ru"    "Убийство товарища по команде без причины - бан"
     }
 
     "Respect the players"
     {
-        "en"    "Respect the players"
+        "ru"    "Уважайте игроков"
     }
 
     "Respect the players (desc)"
     {
-        "en"    "Aggression, racism, nationalism, and discrimination\non various grounds are prohibited"
+        "ru"    "Проявление агрессии, расизма, национализма, дискриминации\nпо различным признакам запрещено"
     }
 
     "Bad nickname"
     {
-        "en"    "Do not use bad nickname"
+        "ru"    "Не используйте плохой никнейм"
     }
 
     "Bad nickname (desc)"
     {
-        "en"    "Use a readable, censored and non-offensive nickname"
+        "ru"    "Используйте читаемый, цензурный и не оскорбительный никнейм"
     }
 
     "Fast respawn"
     {
-        "en"    "Fast respawn is forbidden"
+        "ru"    "Быстрое возрождение запрещено"
     }
 
     "Fast respawn (desc)"
     {
-        "en"    "If you were killed near the respawn and you changed your class,\nyou will be fast respawned"
+        "ru"    "Если вас убили рядом с респауном и вы сменили класс,\nто вы быстро возродитесь"
     }
 }

@@ -1,0 +1,17 @@
+"Phrases"
+{
+    "Server rules"
+    {
+        "en"    "Server rules"
+    }
+
+    "Back"
+    {
+        "en"    "Back"
+    }
+
+    "Exit"
+    {
+        "en"    "Exit"
+    }
+}

@@ -1,0 +1,42 @@
+"ServerRules"
+{
+	"1"
+	{
+		"name"	"Badwords"
+	}
+
+	"2"
+	{
+		"name"	"Cheats"
+	}
+
+	"3"
+	{
+		"name"	"Machine gun in front of respawn"
+	}
+
+	"4"
+	{
+		"name"	"Grenades onto respawn"
+	}
+
+	"5"
+	{
+		"name"	"Deliberate teamkill"
+	}
+
+	"6"
+	{
+		"name"	"Respect the players"
+	}
+
+	"7"
+	{
+		"name"	"Bad nickname"
+	}
+
+	"8"
+	{
+		"name"	"Fast respawn"
+	}
+}

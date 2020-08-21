@@ -13,7 +13,7 @@ Localized server rules for players.
 
 ### Console Variables
 
-* sm_sr_show_on_join - Show rules menu when player joined the game (0 - don't show, 1 - show) [default: 1]
+* sm_sr_show_on_join - Show rules menu when player joined the game (0 - don't show, 1 - show) [default: "1"]
 
 ### Console Commands
 

@@ -2,32 +2,17 @@
 {
     "Badwords"
     {
-        "en"    "No badwords"
-    }
-
-    "Badwords (desc)"
-    {
-        "en"    "Insults and bad words are punishable by a kick or ban"
+        "en"    "No insults and bad words"
     }
 
     "Cheats"
     {
-        "en"    "No cheats"
-    }
-
-    "Cheats (desc)"
-    {
-        "en"    "Using bugs, glitches, exploits or cheats - ban"
+        "en"    "Don't use bugs, glitches, exploits or cheats"
     }
 
     "Machine gun in front of respawn"
     {
-        "en"    "Do not put machine gun in front of respawn"
-    }
-
-    "Machine gun in front of respawn (desc)"
-    {
-        "en"    "In existing of one exit - ban"
+        "en"    "Don't put machine gun in front of respawn"
     }
 
     "Grenades onto respawn"
@@ -35,9 +20,9 @@
         "en"    "Throwing grenades onto respawn is allowed"
     }
 
-    "Grenades onto respawn (desc)"
+    "Spawnkill"
     {
-        "en"    "Spawnkill also allowed"
+        "en"    "Spawnkill is allowed"
     }
 
     "Deliberate teamkill"
@@ -45,27 +30,12 @@
         "en"    "Deliberate teamkill is forbidden"
     }
 
-    "Deliberate teamkill (desc)"
-    {
-        "en"    "Killing a teammate without a reason - ban"
-    }
-
     "Respect the players"
     {
         "en"    "Respect the players"
     }
 
-    "Respect the players (desc)"
-    {
-        "en"    "Aggression, racism, nationalism, and discrimination\non various grounds are prohibited"
-    }
-
     "Bad nickname"
-    {
-        "en"    "Do not use bad nickname"
-    }
-
-    "Bad nickname (desc)"
     {
         "en"    "Use a readable, censored and non-offensive nickname"
     }
@@ -73,10 +43,5 @@
     "Fast respawn"
     {
         "en"    "Fast respawn is forbidden"
-    }
-
-    "Fast respawn (desc)"
-    {
-        "en"    "If you were killed near the respawn and you changed your class,\nyou will be fast respawned"
     }
 }

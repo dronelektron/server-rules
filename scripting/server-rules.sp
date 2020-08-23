@@ -1,40 +1,113 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define RULE_DESCRIPTION_SUFFIX " (desc)"
-#define MAX_TEXT_LENGTH 192
-#define MENU_OPEN_SOUND "buttons/button4.wav"
-
-#define CHOICE_DESCRIPTION "desc"
-#define CHOICE_BACK 8
-
 #define TEAM_ALLIES 2
 #define TEAM_AXIS 3
+
+#define MAX_TEXT_LENGTH 192
+#define MAX_RULES_ON_PAGE 5
+
+#define MENU_OPEN_SOUND "buttons/button4.wav"
+#define MENU_DELAY_SEC 1.0
+
+#define CHOICE_ACCEPT 6
+#define CHOICE_DECLINE 7
+#define CHOICE_PREV_PAGE 8
+#define CHOICE_NEXT_PAGE 9
 
 public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
-    description = "Localized server rules for players",
-    version = "0.2.0",
+    description = "Server rules for players with translation support",
+    version = "0.3.0",
     url = ""
 }
 
 static ConVar g_showRulesOnJoin = null;
 
-static char g_rulesPath[PLATFORM_MAX_PATH];
-static bool g_rulesShown[MAXPLAYERS + 1] = {false, ...};
+enum struct PlayerState {
+    bool rulesShown;
+    int currentPage;
+
+    void CleanUp() {
+        this.rulesShown = false;
+        this.currentPage = 1;
+    }
+}
+
+enum struct RulesPanelInfo {
+    KeyValues ruleLinks;
+    int pages;
+
+    void LoadRules(char[] rulesPath) {
+        char rulesFullPath[PLATFORM_MAX_PATH];
+
+        BuildPath(Path_SM, rulesFullPath, sizeof(rulesFullPath), rulesPath);
+
+        this.ruleLinks = new KeyValues("ServerRules");
+        this.ruleLinks.ImportFromFile(rulesFullPath);
+
+        if (!this.ruleLinks.GotoFirstSubKey()) {
+            delete this.ruleLinks;
+
+            return;
+        }
+
+        int rulesAmount = 0;
+
+        do {
+            rulesAmount++;
+        } while (this.ruleLinks.GotoNextKey());
+
+        this.pages = (rulesAmount / MAX_RULES_ON_PAGE + (rulesAmount % MAX_RULES_ON_PAGE == 0 ? 0 : 1));
+    }
+
+    void AddRulesToPanel(Panel panel, int page, int client) {
+        char currentRuleKeyStr[MAX_TEXT_LENGTH];
+        char ruleName[MAX_TEXT_LENGTH];
+        int currentRuleKey = (page - 1) * MAX_RULES_ON_PAGE + 1;
+        int rulesCounter = 0;
+
+        IntToString(currentRuleKey, currentRuleKeyStr, sizeof(currentRuleKeyStr));
+
+        this.ruleLinks.Rewind();
+        this.ruleLinks.JumpToKey(currentRuleKeyStr, false);
+
+        do {
+            this.ruleLinks.GetString("name", ruleName, sizeof(ruleName));
+
+            AddFormattedPanelText(panel, "%d) %T", currentRuleKey, ruleName, client);
+
+            currentRuleKey++;
+            rulesCounter++;
+        } while (this.ruleLinks.GotoNextKey() && rulesCounter < MAX_RULES_ON_PAGE);
+    }
+
+    void UnloadRules() {
+        delete this.ruleLinks;
+
+        this.pages = 0;
+    }
+}
+
+static PlayerState g_playerStates[MAXPLAYERS + 1];
+static RulesPanelInfo g_rulesPanelInfo;
 
 public void OnPluginStart() {
     LoadTranslations("server-rules-core.phrases");
     LoadTranslations("server-rules-list.phrases");
 
-    RegConsoleCmd("sm_rules", Command_Rules, "Displays menu with localized rules for a player");
+    RegConsoleCmd("sm_rules", Command_Rules, "Display menu with translated rules for a player");
     HookEvent("player_spawn", Event_PlayerSpawn);
-    BuildPath(Path_SM, g_rulesPath, sizeof(g_rulesPath), "configs/server-rules.txt");
 
-    g_showRulesOnJoin = CreateConVar("sm_sr_show_on_join", "1", "Show rules menu when player joined the game");
+    g_showRulesOnJoin = CreateConVar("sm_sr_show_on_join", "1", "Show rules menu when player joined the game (0 - don't show, 1 - show)");
+    g_rulesPanelInfo.LoadRules("configs/server-rules.txt");
 
     AutoExecConfig(true, "server-rules");
+}
+
+public void OnPluginStop() {
+    g_rulesPanelInfo.UnloadRules();
 }
 
 public void OnMapStart() {
@@ -42,11 +115,11 @@ public void OnMapStart() {
 }
 
 public void OnClientConnected(int client) {
-    g_rulesShown[client] = false;
+    g_playerStates[client].CleanUp();
 }
 
 public Action Command_Rules(int client, int args) {
-    CreateRulesMenu(client);
+    CreateRulesPanel(client);
 
     return Plugin_Handled;
 }
@@ -57,11 +130,11 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
     int team = GetClientTeam(client);
     bool isSpectator = (team != TEAM_ALLIES) && (team != TEAM_AXIS);
 
-    if (g_rulesShown[client] || !IsShowRulesWhenConnected() || isSpectator) {
+    if (g_playerStates[client].rulesShown || !IsShowRulesOnJoin() || isSpectator) {
         return;
     }
 
-    CreateTimer(1.0, Timer_ShowRules, userId);
+    CreateTimer(MENU_DELAY_SEC, Timer_ShowRules, userId);
 }
 
 public Action Timer_ShowRules(Handle timer, int userId) {
@@ -71,97 +144,74 @@ public Action Timer_ShowRules(Handle timer, int userId) {
         return Plugin_Stop;
     }
 
-    g_rulesShown[client] = true;
+    g_playerStates[client].rulesShown = true;
 
-    CreateRulesMenu(client);
+    CreateRulesPanel(client);
     EmitSoundToClient(client, MENU_OPEN_SOUND);
 
     return Plugin_Handled;
 }
 
-public int MenuHandler_Rules(Menu menu, MenuAction action, int param1, int param2) {
-    switch (action) {
-        case MenuAction_Select: {
-            char option[MAX_TEXT_LENGTH];
+public int PanelHandler_Rules(Menu menu, MenuAction action, int param1, int param2) {
+    if (action == MenuAction_Select) {
+        switch (param2) {
+            case CHOICE_ACCEPT: {
+                g_playerStates[param1].currentPage = 1;
+            }
 
-            menu.GetItem(param2, option, sizeof(option));
-            CreateRuleDescriptionPanel(param1, option);
-        }
+            case CHOICE_DECLINE: {
+                KickClient(param1, "%t", "You declined the rules");
+            }
 
-        case MenuAction_End: {
-            delete menu;
-        }
-    }
-}
+            case CHOICE_PREV_PAGE: {
+                g_playerStates[param1].currentPage--;
+                CreateRulesPanel(param1);
+            }
 
-public int PanelHandler_RuleDescription(Menu menu, MenuAction action, int param1, int param2) {
-    switch (action) {
-        case MenuAction_Select: {
-            if (param2 == CHOICE_BACK) {
-                CreateRulesMenu(param1);
+            case CHOICE_NEXT_PAGE: {
+                g_playerStates[param1].currentPage++;
+                CreateRulesPanel(param1);
             }
         }
     }
 }
 
-void CreateRulesMenu(int client) {
-    Menu menu = new Menu(MenuHandler_Rules);
-
-    menu.SetTitle("%T", "Server rules", client);
-
-    AddRulesToMenu(menu, client);
-
-    menu.Display(client, MENU_TIME_FOREVER);
-}
-
-void CreateRuleDescriptionPanel(int client, char[] phrase) {
+void CreateRulesPanel(int client) {
+    int currentPage = g_playerStates[client].currentPage;
     Panel panel = new Panel();
-    char ruleDesc[MAX_TEXT_LENGTH];
 
-    Format(ruleDesc, sizeof(ruleDesc), "%s%s", phrase, RULE_DESCRIPTION_SUFFIX);
-    AddFormattedPanelTitle(panel, "%T", phrase, client);
-    AddFormattedPanelItem(panel, ITEMDRAW_SPACER, "");
-    AddFormattedPanelText(panel, "%T", ruleDesc, client);
-    AddFormattedPanelItem(panel, ITEMDRAW_SPACER, "");
+    AddFormattedPanelTitle(panel, "%T", "Server rules", client);
+    AddFormattedPanelText(panel, " ");
 
-    panel.CurrentKey = CHOICE_BACK;
-    AddFormattedPanelItem(panel, ITEMDRAW_CONTROL, "%T", "Back", client);
+    g_rulesPanelInfo.AddRulesToPanel(panel, currentPage, client);
 
-    panel.CurrentKey = 10;
-    AddFormattedPanelItem(panel, ITEMDRAW_CONTROL, "%T", "Exit", client);
+    AddFormattedPanelText(panel, " ");
 
-    panel.Send(client, PanelHandler_RuleDescription, MENU_TIME_FOREVER);
+    panel.CurrentKey = CHOICE_ACCEPT;
+    AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Accept", client);
 
-    delete panel;
-}
+    panel.CurrentKey = CHOICE_DECLINE;
+    AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Decline", client);
 
-void AddRulesToMenu(Menu menu, int client) {
-    KeyValues kv = new KeyValues("ServerRules");
+    panel.CurrentKey = CHOICE_PREV_PAGE;
 
-    kv.ImportFromFile(g_rulesPath);
-
-    if (!kv.GotoFirstSubKey()) {
-        delete kv;
-
-        return;
+    if (currentPage == 1) {
+        AddFormattedPanelItem(panel, ITEMDRAW_DISABLED, "%T", "Previous page", client);
+    } else {
+        AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Previous page", client);
     }
 
-    char ruleName[MAX_TEXT_LENGTH];
+    panel.CurrentKey = CHOICE_NEXT_PAGE;
 
-    do {
-        kv.GetString("name", ruleName, sizeof(ruleName));
+    if (currentPage == g_rulesPanelInfo.pages) {
+        AddFormattedPanelItem(panel, ITEMDRAW_DISABLED, "%T", "Next page", client);
+    } else {
+        AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Next page", client);
+    }
 
-        AddFormattedMenuItem(menu, ruleName, "%T", ruleName, client);
-    } while (kv.GotoNextKey());
+    panel.Send(client, PanelHandler_Rules, MENU_TIME_FOREVER);
 
-    delete kv;
-}
-
-void AddFormattedMenuItem(Menu menu, const char[] option, const char[] format, any ...) {
-    char text[MAX_TEXT_LENGTH];
-
-    VFormat(text, sizeof(text), format, 4);
-    menu.AddItem(option, text);
+    delete panel;
 }
 
 void AddFormattedPanelTitle(Panel panel, const char[] format, any ...) {
@@ -185,6 +235,6 @@ void AddFormattedPanelItem(Panel panel, int style, const char[] format, any ...)
     panel.DrawItem(text, style);
 }
 
-bool IsShowRulesWhenConnected() {
+bool IsShowRulesOnJoin() {
     return g_showRulesOnJoin.IntValue == 1;
 }

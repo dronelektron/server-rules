@@ -22,20 +22,25 @@
 
 	"5"
 	{
-		"name"	"Deliberate teamkill"
+		"name"	"Spawnkill"
 	}
 
 	"6"
 	{
-		"name"	"Respect the players"
+		"name"	"Deliberate teamkill"
 	}
 
 	"7"
 	{
-		"name"	"Bad nickname"
+		"name"	"Respect the players"
 	}
 
 	"8"
+	{
+		"name"	"Bad nickname"
+	}
+
+	"9"
 	{
 		"name"	"Fast respawn"
 	}

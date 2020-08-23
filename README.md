@@ -1,6 +1,6 @@
 # Server Rules
 
-Localized server rules for players.
+Server rules for players with translation support.
 
 ### Supported Games
 
@@ -17,4 +17,4 @@ Localized server rules for players.
 
 ### Console Commands
 
-* sm_rules - Display menu with localized rules for a player
+* sm_rules - Display menu with translated rules for a player

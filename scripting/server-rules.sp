@@ -8,29 +8,32 @@
 #define MAX_RULES_ON_PAGE 5
 
 #define MENU_OPEN_SOUND "buttons/button4.wav"
+#define MENU_SELECT_SOUND "buttons/button14.wav"
+#define MENU_EXIT_SOUND "buttons/combine_button7.wav"
 #define MENU_DELAY_SEC 1.0
 
 #define CHOICE_ACCEPT 6
 #define CHOICE_DECLINE 7
 #define CHOICE_PREV_PAGE 8
 #define CHOICE_NEXT_PAGE 9
+#define CHOICE_EXIT 10
 
 public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
     description = "Server rules for players with translation support",
-    version = "0.3.0",
+    version = "0.4.0",
     url = ""
 }
 
 static ConVar g_showRulesOnJoin = null;
 
 enum struct PlayerState {
-    bool rulesShown;
+    bool rulesAccepted;
     int currentPage;
 
     void CleanUp() {
-        this.rulesShown = false;
+        this.rulesAccepted = false;
         this.currentPage = 1;
     }
 }
@@ -112,6 +115,8 @@ public void OnPluginStop() {
 
 public void OnMapStart() {
     PrecacheSound(MENU_OPEN_SOUND);
+    PrecacheSound(MENU_SELECT_SOUND);
+    PrecacheSound(MENU_EXIT_SOUND);
 }
 
 public void OnClientConnected(int client) {
@@ -130,7 +135,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
     int team = GetClientTeam(client);
     bool isSpectator = (team != TEAM_ALLIES) && (team != TEAM_AXIS);
 
-    if (g_playerStates[client].rulesShown || !IsShowRulesOnJoin() || isSpectator) {
+    if (g_playerStates[client].rulesAccepted || !IsShowRulesOnJoin() || isSpectator) {
         return;
     }
 
@@ -144,8 +149,6 @@ public Action Timer_ShowRules(Handle timer, int userId) {
         return Plugin_Stop;
     }
 
-    g_playerStates[client].rulesShown = true;
-
     CreateRulesPanel(client);
     EmitSoundToClient(client, MENU_OPEN_SOUND);
 
@@ -156,7 +159,9 @@ public int PanelHandler_Rules(Menu menu, MenuAction action, int param1, int para
     if (action == MenuAction_Select) {
         switch (param2) {
             case CHOICE_ACCEPT: {
+                g_playerStates[param1].rulesAccepted = true;
                 g_playerStates[param1].currentPage = 1;
+                EmitSoundToClient(param1, MENU_SELECT_SOUND);
             }
 
             case CHOICE_DECLINE: {
@@ -166,18 +171,27 @@ public int PanelHandler_Rules(Menu menu, MenuAction action, int param1, int para
             case CHOICE_PREV_PAGE: {
                 g_playerStates[param1].currentPage--;
                 CreateRulesPanel(param1);
+                EmitSoundToClient(param1, MENU_SELECT_SOUND);
             }
 
             case CHOICE_NEXT_PAGE: {
                 g_playerStates[param1].currentPage++;
                 CreateRulesPanel(param1);
+                EmitSoundToClient(param1, MENU_SELECT_SOUND);
+            }
+
+            case CHOICE_EXIT: {
+                g_playerStates[param1].currentPage = 1;
+                EmitSoundToClient(param1, MENU_EXIT_SOUND);
             }
         }
     }
 }
 
 void CreateRulesPanel(int client) {
+    int style;
     int currentPage = g_playerStates[client].currentPage;
+    bool rulesAccepted = g_playerStates[client].rulesAccepted;
     Panel panel = new Panel();
 
     AddFormattedPanelTitle(panel, "%T", "Server rules", client);
@@ -188,25 +202,48 @@ void CreateRulesPanel(int client) {
     AddFormattedPanelText(panel, " ");
 
     panel.CurrentKey = CHOICE_ACCEPT;
-    AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Accept", client);
+
+    if (rulesAccepted) {
+        style = ITEMDRAW_DISABLED;
+    } else {
+        style = ITEMDRAW_DEFAULT;
+    }
+
+    AddFormattedPanelItem(panel, style, "%T", "Accept", client);
 
     panel.CurrentKey = CHOICE_DECLINE;
-    AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Decline", client);
+
+    if (rulesAccepted) {
+        style = ITEMDRAW_DISABLED;
+    } else {
+        style = ITEMDRAW_DEFAULT;
+    }
+
+    AddFormattedPanelItem(panel, style, "%T", "Decline", client);
 
     panel.CurrentKey = CHOICE_PREV_PAGE;
 
     if (currentPage == 1) {
-        AddFormattedPanelItem(panel, ITEMDRAW_DISABLED, "%T", "Previous page", client);
+        style = ITEMDRAW_DISABLED;
     } else {
-        AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Previous page", client);
+        style = ITEMDRAW_DEFAULT;
     }
+
+    AddFormattedPanelItem(panel, style, "%T", "Previous page", client);
 
     panel.CurrentKey = CHOICE_NEXT_PAGE;
 
     if (currentPage == g_rulesPanelInfo.pages) {
-        AddFormattedPanelItem(panel, ITEMDRAW_DISABLED, "%T", "Next page", client);
+        style = ITEMDRAW_DISABLED;
     } else {
-        AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Next page", client);
+        style = ITEMDRAW_DEFAULT;
+    }
+
+    AddFormattedPanelItem(panel, style, "%T", "Next page", client);
+
+    if (rulesAccepted) {
+        panel.CurrentKey = CHOICE_EXIT;
+        AddFormattedPanelItem(panel, ITEMDRAW_DEFAULT, "%T", "Exit", client);
     }
 
     panel.Send(client, PanelHandler_Rules, MENU_TIME_FOREVER);

@@ -25,6 +25,11 @@
         "en"    "Next page"
     }
 
+    "Exit"
+    {
+        "en"    "Exit"
+    }
+
     "You declined the rules"
     {
         "en"    "You declined the rules"

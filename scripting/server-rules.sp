@@ -1,5 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
+#include <clientprefs>
 
 #define TEAM_ALLIES 2
 #define TEAM_AXIS 3
@@ -18,6 +19,8 @@
 #define CHOICE_NEXT_PAGE 9
 #define CHOICE_EXIT 10
 
+#define SECONDS_IN_MINUTE 60
+
 public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
@@ -27,6 +30,9 @@ public Plugin myinfo = {
 }
 
 static ConVar g_showRulesOnJoin = null;
+static ConVar g_rulesExpiryTime = null;
+
+static Handle g_rulesCookie = null;
 
 enum struct PlayerState {
     bool rulesAccepted;
@@ -104,6 +110,8 @@ public void OnPluginStart() {
     HookEvent("player_spawn", Event_PlayerSpawn);
 
     g_showRulesOnJoin = CreateConVar("sm_sr_show_on_join", "1", "Show rules menu when player joined the game (0 - don't show, 1 - show)");
+    g_rulesExpiryTime = CreateConVar("sm_sr_expiry_time", "60", "Rules expiry time (in minutes)");
+    g_rulesCookie = RegClientCookie("server-rules-accepted", "Did the player accept the rules of the server", CookieAccess_Private);
     g_rulesPanelInfo.LoadRules("configs/server-rules.txt");
 
     AutoExecConfig(true, "server-rules");
@@ -121,6 +129,10 @@ public void OnMapStart() {
 
 public void OnClientConnected(int client) {
     g_playerStates[client].CleanUp();
+}
+
+public void OnClientDisconnect(int client) {
+    SetClientCookie(client, g_rulesCookie, "");
 }
 
 public Action Command_Rules(int client, int args) {
@@ -149,8 +161,10 @@ public Action Timer_ShowRules(Handle timer, int userId) {
         return Plugin_Stop;
     }
 
-    CreateRulesPanel(client);
-    EmitSoundToClient(client, MENU_OPEN_SOUND);
+    if (!AreClientCookiesCached(client) || IsRulesCookieExpired(client)) {
+        CreateRulesPanel(client);
+        EmitSoundToClient(client, MENU_OPEN_SOUND);
+    }
 
     return Plugin_Handled;
 }
@@ -274,4 +288,16 @@ void AddFormattedPanelItem(Panel panel, int style, const char[] format, any ...)
 
 bool IsShowRulesOnJoin() {
     return g_showRulesOnJoin.IntValue == 1;
+}
+
+int GetExpiryTime() {
+    return g_rulesExpiryTime.IntValue;
+}
+
+bool IsRulesCookieExpired(int client) {
+    int cookieTime = GetClientCookieTime(client, g_rulesCookie);
+    int currentTime = GetTime();
+    int expiryTimeInSeconds = GetExpiryTime() * SECONDS_IN_MINUTE;
+
+    return currentTime - cookieTime > expiryTimeInSeconds;
 }

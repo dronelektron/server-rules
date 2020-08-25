@@ -25,7 +25,7 @@ public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
     description = "Server rules for players with translation support",
-    version = "0.4.0",
+    version = "0.4.1",
     url = ""
 }
 
@@ -133,6 +133,12 @@ public void OnClientConnected(int client) {
 
 public void OnClientDisconnect(int client) {
     SetClientCookie(client, g_rulesCookie, "");
+}
+
+public void OnClientCookiesCached(int client) {
+    if (!IsRulesCookieExpired(client)) {
+        g_playerStates[client].rulesAccepted = true;
+    }
 }
 
 public Action Command_Rules(int client, int args) {

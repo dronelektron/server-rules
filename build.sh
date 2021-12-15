@@ -1,3 +1,6 @@
 #!/bin/bash
 
-spcomp scripting/server-rules.sp -o plugins/server-rules.smx
+PLUGIN_NAME="server-rules"
+
+cd scripting
+spcomp $PLUGIN_NAME.sp -o ../plugins/$PLUGIN_NAME.smx

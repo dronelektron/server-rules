@@ -1,6 +1,6 @@
-# Server Rules
+# Server rules
 
-Server rules for players with translation support.
+Server rules for players with translation support
 
 ### Supported Games
 
@@ -8,14 +8,14 @@ Server rules for players with translation support.
 
 ### Installation
 
-* Download latest [release](https://github.com/Dron-elektron/server-rules/releases) (compiled for SourceMod 1.10)
-* Extract "configs", "translations" and "plugins" folders to "addons/sourcemod" folder of your server
+* Download latest [release](https://github.com/dronelektron/server-rules/releases) (compiled for SourceMod 1.10)
+* Extract "plugins" and "translations" folders to "addons/sourcemod" folder of your server
 
 ### Console Variables
 
-* sm_sr_show_on_join - Show rules menu when player joined the game (0 - don't show, 1 - show) [default: "1"]
-* sm_sr_expiry_time - Rules expiry time (in minutes) [default: "60"]
+* sm_serverrules_show_on_join - Show (1 - on, 0 - off) rules panel when a player has joined the server [default: "1"]
+* sm_serverrules_expiry_time - Rules expiry time (in minutes) [default: "1440"]
 
 ### Console Commands
 
-* sm_rules - Display menu with translated rules for a player
+* sm_rules - Show panel with translated rules for player

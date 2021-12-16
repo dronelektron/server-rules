@@ -5,33 +5,18 @@
         "en"    "Server rules"
     }
 
-    "Accept"
+    "Back"
     {
-        "en"    "Accept"
+        "en"    "Back"
     }
 
-    "Decline"
+    "Next"
     {
-        "en"    "Decline"
-    }
-
-    "Previous page"
-    {
-        "en"    "Previous page"
-    }
-
-    "Next page"
-    {
-        "en"    "Next page"
+        "en"    "Next"
     }
 
     "Exit"
     {
         "en"    "Exit"
-    }
-
-    "You declined the rules"
-    {
-        "en"    "You declined the rules"
     }
 }

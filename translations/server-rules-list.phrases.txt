@@ -1,47 +1,32 @@
 "Phrases"
 {
-    "Badwords"
+    "Rule 1"
     {
-        "en"    "No insults and bad words"
+        "en"    "Test rule #1"
     }
 
-    "Cheats"
+    "Rule 2"
     {
-        "en"    "Don't use bugs, glitches, exploits or cheats"
+        "en"    "Test rule #2"
     }
 
-    "Machine gun in front of respawn"
+    "Rule 3"
     {
-        "en"    "Don't put machine gun in front of respawn"
+        "en"    "Test rule #3"
     }
 
-    "Grenades onto respawn"
+    "Rule 4"
     {
-        "en"    "Throwing grenades onto respawn is allowed"
+        "en"    "Test rule #4"
     }
 
-    "Spawnkill"
+    "Rule 5"
     {
-        "en"    "Spawnkill is allowed"
+        "en"    "Test rule #5"
     }
 
-    "Deliberate teamkill"
+    "Rule 6"
     {
-        "en"    "Deliberate teamkill is forbidden"
-    }
-
-    "Respect the players"
-    {
-        "en"    "Respect the players"
-    }
-
-    "Bad nickname"
-    {
-        "en"    "Use a readable, censored and non-offensive nickname"
-    }
-
-    "Fast respawn"
-    {
-        "en"    "Fast respawn is forbidden"
+        "en"    "Test rule #6"
     }
 }

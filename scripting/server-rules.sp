@@ -11,6 +11,7 @@
 #define RULES_PER_PAGE 5
 #define SECONDS_IN_MINUTE 60
 #define MENU_DELAY_SEC 0.5
+#define MENU_TIME 20
 
 #define MENU_SOUND_OPEN "buttons/button4.wav"
 #define MENU_SOUND_ITEM "buttons/button14.wav"
@@ -114,6 +115,8 @@ public Action Timer_ShowRules(Handle timer, int userId) {
     ShowRulesPanel(client, Page_First);
     EmitSoundToClient(client, MENU_SOUND_OPEN);
 
+    g_isRulesShown[client] = true;
+
     return Plugin_Handled;
 }
 
@@ -197,7 +200,9 @@ void CreateRulesPanel(int client) {
     AddSpacerToPanel(panel);
     AddButtonsToPanel(panel, client);
 
-    panel.Send(client, PanelHandler_Rules, MENU_TIME_FOREVER);
+    panel.Send(client, PanelHandler_Rules, MENU_TIME);
+
+    delete panel;
 }
 
 public int PanelHandler_Rules(Menu menu, MenuAction action, int param1, int param2) {

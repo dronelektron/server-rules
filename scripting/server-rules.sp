@@ -17,8 +17,8 @@
 #define MENU_SOUND_ITEM "buttons/button14.wav"
 #define MENU_SOUND_EXIT "buttons/combine_button7.wav"
 
-#define CHOICE_PREV_PAGE 8
-#define CHOICE_NEXT_PAGE 9
+#define CHOICE_BACK 8
+#define CHOICE_NEXT 9
 #define CHOICE_EXIT 10
 
 public Plugin myinfo = {
@@ -208,12 +208,12 @@ void CreateRulesPanel(int client) {
 public int PanelHandler_Rules(Menu menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_Select) {
         switch (param2) {
-            case CHOICE_PREV_PAGE: {
+            case CHOICE_BACK: {
                 ShowRulesPanel(param1, Page_Previous);
                 EmitSoundToClient(param1, MENU_SOUND_ITEM);
             }
 
-            case CHOICE_NEXT_PAGE: {
+            case CHOICE_NEXT: {
                 ShowRulesPanel(param1, Page_Next);
                 EmitSoundToClient(param1, MENU_SOUND_ITEM);
             }
@@ -245,13 +245,13 @@ void AddButtonsToPanel(Panel panel, int client) {
     bool isPrevPageExists = currentPageIndex > 0;
 
     if (isPrevPageExists) {
-        AddFormattedItemToPanel(panel, CHOICE_PREV_PAGE, "%T", "Back", client);
+        AddFormattedItemToPanel(panel, CHOICE_BACK, "%T", "Back", client);
     }
 
     bool isNextPageExists = currentPageIndex < (g_rules.Length - 1) / RULES_PER_PAGE;
 
     if (isNextPageExists) {
-        AddFormattedItemToPanel(panel, CHOICE_NEXT_PAGE, "%T", "Next", client);
+        AddFormattedItemToPanel(panel, CHOICE_NEXT, "%T", "Next", client);
     }
 
     AddFormattedItemToPanel(panel, CHOICE_EXIT, "%T", "Exit", client);

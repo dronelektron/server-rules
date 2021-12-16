@@ -45,7 +45,7 @@ Handle g_rulesCookie = null;
 ArrayList g_rules = null;
 
 int g_currentPageIndex[MAXPLAYERS + 1];
-bool g_isRulesAccepted[MAXPLAYERS + 1];
+bool g_isRulesShown[MAXPLAYERS + 1];
 
 public void OnPluginStart() {
     g_showRulesOnJoin = CreateConVar("sm_serverrules_show_on_join", "1", "Show (1 - on, 0 - off) rules panel when a player has joined the server");
@@ -71,6 +71,10 @@ public void OnMapStart() {
     PrecacheSound(MENU_SOUND_EXIT);
 }
 
+public void OnClientConnected(int client) {
+    g_isRulesShown[client] = false;
+}
+
 public void OnClientDisconnect(int client) {
     if (AreClientCookiesCached(client)) {
         SetClientCookie(client, g_rulesCookie, "");
@@ -78,7 +82,7 @@ public void OnClientDisconnect(int client) {
 }
 
 public void OnClientCookiesCached(int client) {
-    g_isRulesAccepted[client] = !IsRulesCookieExpired(client);
+    g_isRulesShown[client] = !IsRulesCookieExpired(client);
 }
 
 public Action Command_Rules(int client, int args) {
@@ -93,7 +97,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
     int team = GetClientTeam(client);
     bool isSpectator = (team != Team_Allies) && (team != Team_Axis);
 
-    if (g_isRulesAccepted[client] || !IsShowRulesOnJoin() || isSpectator) {
+    if (g_isRulesShown[client] || !IsShowRulesOnJoin() || isSpectator) {
         return;
     }
 

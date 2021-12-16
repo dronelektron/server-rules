@@ -50,7 +50,7 @@ bool g_isRulesAccepted[MAXPLAYERS + 1];
 public void OnPluginStart() {
     g_showRulesOnJoin = CreateConVar("sm_serverrules_show_on_join", "1", "Show (1 - on, 0 - off) rules panel when a player has joined the server");
     g_rulesExpiryTime = CreateConVar("sm_serverrules_expiry_time", "1440", "Rules expiry time (in minutes)");
-    g_rulesCookie = RegClientCookie("server_rules_accepted", "Did the player accept the rules of the server", CookieAccess_Private);
+    g_rulesCookie = RegClientCookie("serverrules_shown", "Server rules have been shown", CookieAccess_Private);
 
     CookiesLateLoad();
     LoadRules();

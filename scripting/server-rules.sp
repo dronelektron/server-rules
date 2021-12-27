@@ -5,6 +5,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define TEAM_ALLIES 2
+
 #define TEXT_MAX_SIZE 256
 #define TEXT_BUFFER_MAX_SIZE (TEXT_MAX_SIZE * 4)
 
@@ -27,11 +29,6 @@ public Plugin myinfo = {
     description = "Server rules for players with translation support",
     version = "1.0.2",
     url = ""
-};
-
-enum {
-    Team_Allies = 2,
-    Team_Axis
 };
 
 enum Page {
@@ -96,7 +93,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
     int userId = event.GetInt("userid");
     int client = GetClientOfUserId(userId);
     int team = GetClientTeam(client);
-    bool isSpectator = (team != Team_Allies) && (team != Team_Axis);
+    bool isSpectator = team < TEAM_ALLIES;
 
     if (g_isRulesShown[client] || !IsShowRulesOnJoin() || isSpectator) {
         return;
@@ -114,8 +111,6 @@ public Action Timer_ShowRules(Handle timer, int userId) {
 
     ShowRulesPanel(client, Page_First);
     EmitSoundToClient(client, MENU_SOUND_OPEN);
-
-    g_isRulesShown[client] = true;
 
     return Plugin_Handled;
 }
@@ -189,6 +184,8 @@ void ShowRulesPanel(int client, Page page) {
     }
 
     CreateRulesPanel(client);
+
+    g_isRulesShown[client] = true;
 }
 
 void CreateRulesPanel(int client) {
@@ -230,7 +227,7 @@ public int PanelHandler_Rules(Menu menu, MenuAction action, int param1, int para
 void AddRulesToPanel(Panel panel, int client) {
     int currentPageIndex = g_currentPageIndex[client];
     int startRuleIndex = currentPageIndex * RULES_PER_PAGE;
-    int endRuleIndex = min(startRuleIndex + RULES_PER_PAGE, g_rules.Length);
+    int endRuleIndex = Min(startRuleIndex + RULES_PER_PAGE, g_rules.Length);
     char rulePhrase[TEXT_MAX_SIZE];
 
     for (int ruleIndex = startRuleIndex; ruleIndex < endRuleIndex; ruleIndex++) {
@@ -286,7 +283,7 @@ void AddSpacerToPanel(Panel panel) {
     panel.DrawItem("", ITEMDRAW_SPACER);
 }
 
-int min(int a, int b) {
+int Min(int a, int b) {
     return a < b ? a : b;
 }
 

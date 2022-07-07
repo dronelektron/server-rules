@@ -20,7 +20,7 @@ public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
     description = "Server rules for players with translation support",
-    version = "1.0.4",
+    version = "1.0.5",
     url = "https://github.com/dronelektron/server-rules"
 };
 

@@ -1,4 +1,10 @@
-void Menu_Rules(int client) {
+static int g_pageIndex[MAXPLAYERS + 1];
+
+void Menu_Rules(int client, bool firstTime = true) {
+    if (firstTime) {
+        g_pageIndex[client] = 0;
+    }
+
     Panel panel = new Panel();
 
     Menu_SetFormattedTitle(panel, client);
@@ -7,27 +13,20 @@ void Menu_Rules(int client) {
     Menu_AddSpacer(panel);
     Menu_AddButtons(panel, client);
 
-    panel.Send(client, MenuHandler_Rules, MENU_TIME);
+    panel.Send(client, MenuHandler_Rules, MENU_TIME_FOREVER);
 
     delete panel;
 }
 
 public int MenuHandler_Rules(Menu menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_Select) {
-        switch (param2) {
-            case CHOICE_BACK: {
-                UseCase_ShowRules(param1, Page_Previous);
-                EmitSoundToClient(param1, SOUND_RULES_ITEM);
-            }
+        if (param2 == CHOICE_EXIT) {
+            EmitSoundToClient(param1, SOUND_RULES_EXIT);
+        } else {
+            g_pageIndex[param1] += param2 == CHOICE_BACK ? -1 : 1;
 
-            case CHOICE_NEXT: {
-                UseCase_ShowRules(param1, Page_Next);
-                EmitSoundToClient(param1, SOUND_RULES_ITEM);
-            }
-
-            case CHOICE_EXIT: {
-                EmitSoundToClient(param1, SOUND_RULES_EXIT);
-            }
+            Menu_Rules(param1, FIRST_TIME_NO);
+            EmitSoundToClient(param1, SOUND_RULES_ITEM);
         }
     }
 
@@ -35,7 +34,7 @@ public int MenuHandler_Rules(Menu menu, MenuAction action, int param1, int param
 }
 
 void Menu_SetFormattedTitle(Panel panel, int client) {
-    char title[TEXT_BUFFER_MAX_SIZE];
+    char title[ITEM_SIZE];
 
     Format(title, sizeof(title), "%T", "Server rules", client);
 
@@ -47,26 +46,26 @@ void Menu_AddSpacer(Panel panel) {
 }
 
 void Menu_AddButtons(Panel panel, int client) {
-    int currentPageIndex = UseCase_GetCurrentPageIndex(client);
+    int currentPageIndex = g_pageIndex[client];
     bool isPrevPageExists = currentPageIndex > 0;
 
     if (isPrevPageExists) {
-        Menu_AddItem(panel, CHOICE_BACK, "%T", "Back", client);
+        Menu_AddItem(panel, CHOICE_BACK, "%T", ITEM_BACK, client);
     }
 
     bool isNextPageExists = currentPageIndex < (RulesStorage_Size() - 1) / RULES_PER_PAGE;
 
     if (isNextPageExists) {
-        Menu_AddItem(panel, CHOICE_NEXT, "%T", "Next", client);
+        Menu_AddItem(panel, CHOICE_NEXT, "%T", ITEM_NEXT, client);
     }
 
-    Menu_AddItem(panel, CHOICE_EXIT, "%T", "Exit", client);
+    Menu_AddItem(panel, CHOICE_EXIT, "%T", ITEM_EXIT, client);
 }
 
 void Menu_AddRules(Panel panel, int client) {
-    int currentPageIndex = UseCase_GetCurrentPageIndex(client);
+    int currentPageIndex = g_pageIndex[client];
     int startRuleIndex = currentPageIndex * RULES_PER_PAGE;
-    int endRuleIndex = Min(startRuleIndex + RULES_PER_PAGE, RulesStorage_Size());
+    int endRuleIndex = Math_Min(startRuleIndex + RULES_PER_PAGE, RulesStorage_Size());
     char rulePhrase[RULE_PHRASE_MAX_SIZE];
 
     for (int ruleIndex = startRuleIndex; ruleIndex < endRuleIndex; ruleIndex++) {
@@ -76,7 +75,7 @@ void Menu_AddRules(Panel panel, int client) {
 }
 
 void Menu_AddText(Panel panel, const char[] format, any ...) {
-    char text[TEXT_BUFFER_MAX_SIZE];
+    char text[ITEM_SIZE];
 
     VFormat(text, sizeof(text), format, 3);
 
@@ -84,14 +83,10 @@ void Menu_AddText(Panel panel, const char[] format, any ...) {
 }
 
 void Menu_AddItem(Panel panel, int key, const char[] format, any ...) {
-    char text[TEXT_BUFFER_MAX_SIZE];
+    char text[ITEM_SIZE];
 
     VFormat(text, sizeof(text), format, 4);
 
     panel.CurrentKey = key;
     panel.DrawItem(text);
-}
-
-int Min(int a, int b) {
-    return a < b ? a : b;
 }

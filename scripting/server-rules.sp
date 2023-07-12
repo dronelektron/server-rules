@@ -12,6 +12,7 @@
 #include "modules/console-variable.sp"
 #include "modules/cookie.sp"
 #include "modules/event.sp"
+#include "modules/math.sp"
 #include "modules/menu.sp"
 #include "modules/rules-storage.sp"
 #include "modules/sound.sp"

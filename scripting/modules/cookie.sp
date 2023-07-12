@@ -26,7 +26,7 @@ void Cookie_SetRulesShown(int client, const char[] rulesShown) {
     Cookie_UpdateRulesShown(client, rulesShown);
 }
 
-static int Cookie_IsExpired(int client) {
+static bool Cookie_IsExpired(int client) {
     int cookieTime = GetClientCookieTime(client, g_rulesCookie);
     int currentTime = GetTime();
     int expiryTimeInSeconds = Variable_GetExpiryTime() * SECONDS_IN_MINUTE;

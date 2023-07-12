@@ -3,7 +3,7 @@ void Command_Create() {
 }
 
 public Action Command_Rules(int client, int args) {
-    UseCase_ShowRules(client, Page_First);
+    Menu_Rules(client);
 
     return Plugin_Handled;
 }

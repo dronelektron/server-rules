@@ -10,6 +10,7 @@
 #include "modules/console-command.sp"
 #include "modules/console-variable.sp"
 #include "modules/cookie.sp"
+#include "modules/event.sp"
 #include "modules/menu.sp"
 #include "modules/rules-storage.sp"
 #include "modules/use-case.sp"
@@ -26,9 +27,9 @@ public void OnPluginStart() {
     Command_Create();
     Variable_Create();
     Cookie_Create();
+    Event_Create();
     RulesStorage_Load();
     CookieLateLoad();
-    HookEvent("player_spawn", Event_PlayerSpawn);
     LoadTranslations("server-rules-core.phrases");
     LoadTranslations("server-rules-list.phrases");
     AutoExecConfig(true, "server-rules");
@@ -46,13 +47,6 @@ public void OnMapStart() {
 
 public void OnClientCookiesCached(int client) {
     Cookie_Load(client);
-}
-
-public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast) {
-    int userId = event.GetInt("userid");
-    int client = GetClientOfUserId(userId);
-
-    UseCase_OnPlayerSpawn(client);
 }
 
 static void CookieLateLoad() {

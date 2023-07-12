@@ -37,10 +37,6 @@ public void OnPluginStart() {
     AutoExecConfig(true, "server-rules");
 }
 
-public void OnPluginEnd() {
-    RulesStorage_Unload();
-}
-
 public void OnMapStart() {
     Sound_Precache();
 }

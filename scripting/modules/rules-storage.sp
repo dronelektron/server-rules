@@ -36,7 +36,3 @@ void RulesStorage_Load() {
 
     delete kv;
 }
-
-void RulesStorage_Unload() {
-    delete g_rules;
-}

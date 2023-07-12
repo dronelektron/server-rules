@@ -2,9 +2,6 @@
 #include <sdktools>
 #include <clientprefs>
 
-#pragma semicolon 1
-#pragma newdecls required
-
 #include "sr/cookie"
 #include "sr/menu"
 #include "sr/rules-storage"

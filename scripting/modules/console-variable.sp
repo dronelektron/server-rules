@@ -6,7 +6,7 @@ void Variable_Create() {
     g_rulesExpiryTime = CreateConVar("sm_serverrules_expiry_time", "1440", "Rules expiry time (in minutes)");
 }
 
-bool Variable_IsShowRulesOnJoin() {
+bool Variable_ShowRulesOnJoin() {
     return g_showRulesOnJoin.IntValue == 1;
 }
 

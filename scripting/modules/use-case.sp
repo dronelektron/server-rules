@@ -1,21 +1,7 @@
 static int g_currentPageIndex[MAXPLAYERS + 1];
-static bool g_isRulesShown[MAXPLAYERS + 1];
 
 int UseCase_GetCurrentPageIndex(int client) {
     return g_currentPageIndex[client];
-}
-
-void UseCase_ResetRulesShown(int client) {
-    g_isRulesShown[client] = false;
-}
-
-void UseCase_SetRulesShownFromCookies(int client) {
-    int cookieTime = Preferences_GetCookieTime(client);
-    int currentTime = GetTime();
-    int expiryTimeInSeconds = Variable_GetExpiryTime() * SECONDS_IN_MINUTE;
-    bool isRulesCookieExpired = currentTime - cookieTime > expiryTimeInSeconds;
-
-    g_isRulesShown[client] = !isRulesCookieExpired;
 }
 
 void UseCase_ShowRules(int client, Page page) {
@@ -34,27 +20,27 @@ void UseCase_ShowRules(int client, Page page) {
     }
 
     Menu_Rules(client);
-
-    g_isRulesShown[client] = true;
+    Cookie_SetRulesShown(client, COOKIE_RULES_SHOWN_YES);
 }
 
-void UseCase_PlayerSpawn(int userId) {
-    int client = GetClientOfUserId(userId);
+void UseCase_OnPlayerSpawn(int client) {
     int team = GetClientTeam(client);
     bool isSpectator = team < TEAM_ALLIES;
 
-    if (g_isRulesShown[client] || !Variable_IsShowRulesOnJoin() || isSpectator) {
+    if (!Variable_ShowRulesOnJoin() || Cookie_IsRulesShown(client) || isSpectator) {
         return;
     }
 
-    CreateTimer(MENU_DELAY_SEC, Timer_ShowRules, userId);
+    int userId = GetClientUserId(client);
+
+    CreateTimer(MENU_DELAY_SECONDS, Timer_ShowRules, userId);
 }
 
 public Action Timer_ShowRules(Handle timer, int userId) {
     int client = GetClientOfUserId(userId);
 
     if (client == 0) {
-        return Plugin_Stop;
+        return Plugin_Handled;
     }
 
     UseCase_ShowRules(client, Page_First);

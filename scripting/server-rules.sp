@@ -5,6 +5,7 @@
 #include "sr/cookie"
 #include "sr/menu"
 #include "sr/rules-storage"
+#include "sr/sound"
 #include "sr/use-case"
 
 #include "modules/console-command.sp"
@@ -13,6 +14,7 @@
 #include "modules/event.sp"
 #include "modules/menu.sp"
 #include "modules/rules-storage.sp"
+#include "modules/sound.sp"
 #include "modules/use-case.sp"
 
 public Plugin myinfo = {
@@ -40,9 +42,7 @@ public void OnPluginEnd() {
 }
 
 public void OnMapStart() {
-    PrecacheSound(MENU_SOUND_OPEN);
-    PrecacheSound(MENU_SOUND_ITEM);
-    PrecacheSound(MENU_SOUND_EXIT);
+    Sound_Precache();
 }
 
 public void OnClientCookiesCached(int client) {

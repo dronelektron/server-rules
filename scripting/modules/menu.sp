@@ -17,16 +17,16 @@ public int MenuHandler_Rules(Menu menu, MenuAction action, int param1, int param
         switch (param2) {
             case CHOICE_BACK: {
                 UseCase_ShowRules(param1, Page_Previous);
-                EmitSoundToClient(param1, MENU_SOUND_ITEM);
+                EmitSoundToClient(param1, SOUND_RULES_ITEM);
             }
 
             case CHOICE_NEXT: {
                 UseCase_ShowRules(param1, Page_Next);
-                EmitSoundToClient(param1, MENU_SOUND_ITEM);
+                EmitSoundToClient(param1, SOUND_RULES_ITEM);
             }
 
             case CHOICE_EXIT: {
-                EmitSoundToClient(param1, MENU_SOUND_EXIT);
+                EmitSoundToClient(param1, SOUND_RULES_EXIT);
             }
         }
     }

@@ -44,7 +44,7 @@ public Action Timer_ShowRules(Handle timer, int userId) {
     }
 
     UseCase_ShowRules(client, Page_First);
-    EmitSoundToClient(client, MENU_SOUND_OPEN);
+    EmitSoundToClient(client, SOUND_RULES_OPEN);
 
     return Plugin_Handled;
 }

@@ -53,7 +53,7 @@ void Menu_AddButtons(Panel panel, int client) {
         Menu_AddItem(panel, CHOICE_BACK, "%T", ITEM_BACK, client);
     }
 
-    bool isNextPageExists = currentPageIndex < (RulesStorage_Size() - 1) / RULES_PER_PAGE;
+    bool isNextPageExists = currentPageIndex < (RulesList_Size() - 1) / RULES_PER_PAGE;
 
     if (isNextPageExists) {
         Menu_AddItem(panel, CHOICE_NEXT, "%T", ITEM_NEXT, client);
@@ -65,11 +65,11 @@ void Menu_AddButtons(Panel panel, int client) {
 void Menu_AddRules(Panel panel, int client) {
     int currentPageIndex = g_pageIndex[client];
     int startRuleIndex = currentPageIndex * RULES_PER_PAGE;
-    int endRuleIndex = Math_Min(startRuleIndex + RULES_PER_PAGE, RulesStorage_Size());
-    char rulePhrase[RULE_PHRASE_MAX_SIZE];
+    int endRuleIndex = Math_Min(startRuleIndex + RULES_PER_PAGE, RulesList_Size());
+    char rulePhrase[RULE_PHRASE_SIZE];
 
     for (int ruleIndex = startRuleIndex; ruleIndex < endRuleIndex; ruleIndex++) {
-        RulesStorage_Get(ruleIndex, rulePhrase);
+        RulesList_Get(ruleIndex, rulePhrase);
         Menu_AddText(panel, "%d) %T", ruleIndex + 1, rulePhrase, client);
     }
 }

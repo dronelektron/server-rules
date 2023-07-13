@@ -4,6 +4,7 @@
 
 #include "sr/cookie"
 #include "sr/menu"
+#include "sr/rules-list"
 #include "sr/rules-storage"
 #include "sr/sound"
 #include "sr/use-case"
@@ -14,6 +15,7 @@
 #include "modules/event.sp"
 #include "modules/math.sp"
 #include "modules/menu.sp"
+#include "modules/rules-list.sp"
 #include "modules/rules-storage.sp"
 #include "modules/sound.sp"
 #include "modules/use-case.sp"
@@ -31,7 +33,7 @@ public void OnPluginStart() {
     Variable_Create();
     Cookie_Create();
     Event_Create();
-    RulesStorage_Load();
+    RulesList_Create();
     CookieLateLoad();
     LoadTranslations("server-rules-core.phrases");
     LoadTranslations("server-rules-list.phrases");
@@ -40,6 +42,7 @@ public void OnPluginStart() {
 
 public void OnMapStart() {
     Sound_Precache();
+    RulesStorage_Load();
 }
 
 public void OnClientCookiesCached(int client) {

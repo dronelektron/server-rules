@@ -20,6 +20,8 @@
 #include "modules/sound.sp"
 #include "modules/use-case.sp"
 
+#define AUTO_CREATE_YES true
+
 public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
@@ -37,7 +39,7 @@ public void OnPluginStart() {
     CookieLateLoad();
     LoadTranslations("server-rules-core.phrases");
     LoadTranslations("server-rules-list.phrases");
-    AutoExecConfig(true, "server-rules");
+    AutoExecConfig(AUTO_CREATE_YES, "server-rules");
 }
 
 public void OnMapStart() {

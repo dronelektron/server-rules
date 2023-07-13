@@ -2,69 +2,56 @@
 #include <sdktools>
 #include <clientprefs>
 
-#pragma semicolon 1
-#pragma newdecls required
-
+#include "sr/cookie"
 #include "sr/menu"
+#include "sr/rules-list"
 #include "sr/rules-storage"
+#include "sr/sound"
 #include "sr/use-case"
 
 #include "modules/console-command.sp"
 #include "modules/console-variable.sp"
+#include "modules/cookie.sp"
+#include "modules/event.sp"
+#include "modules/math.sp"
 #include "modules/menu.sp"
-#include "modules/preferences.sp"
+#include "modules/rules-list.sp"
 #include "modules/rules-storage.sp"
+#include "modules/sound.sp"
 #include "modules/use-case.sp"
+
+#define AUTO_CREATE_YES true
 
 public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
     description = "Server rules for players with translation support",
-    version = "1.0.5",
+    version = "1.0.6",
     url = "https://github.com/dronelektron/server-rules"
 };
 
 public void OnPluginStart() {
     Command_Create();
     Variable_Create();
-    Preferences_Create();
-    RulesStorage_Load();
-    CookiesLateLoad();
-    HookEvent("player_spawn", Event_PlayerSpawn);
+    Cookie_Create();
+    Event_Create();
+    RulesList_Create();
+    CookieLateLoad();
     LoadTranslations("server-rules-core.phrases");
     LoadTranslations("server-rules-list.phrases");
-    AutoExecConfig(true, "server-rules");
-}
-
-public void OnPluginEnd() {
-    RulesStorage_Unload();
+    AutoExecConfig(AUTO_CREATE_YES, "server-rules");
 }
 
 public void OnMapStart() {
-    PrecacheSound(MENU_SOUND_OPEN);
-    PrecacheSound(MENU_SOUND_ITEM);
-    PrecacheSound(MENU_SOUND_EXIT);
-}
-
-public void OnClientConnected(int client) {
-    UseCase_ResetRulesShown(client);
-}
-
-public void OnClientDisconnect(int client) {
-    Preferences_Clear(client);
+    Sound_Precache();
+    RulesStorage_Load();
 }
 
 public void OnClientCookiesCached(int client) {
-    UseCase_SetRulesShownFromCookies(client);
+    Cookie_Load(client);
 }
 
-public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast) {
-    int userId = event.GetInt("userid");
-
-    UseCase_PlayerSpawn(userId);
-}
-
-void CookiesLateLoad() {
+static void CookieLateLoad() {
     for (int i = 1; i <= MaxClients; i++) {
         if (AreClientCookiesCached(i)) {
             OnClientCookiesCached(i);

@@ -14,7 +14,7 @@ Server rules for players with translation support
 ### Console Variables
 
 * sm_serverrules_show_on_join - Show (1 - on, 0 - off) rules panel when a player has joined the server [default: "1"]
-* sm_serverrules_expiry_time - Rules expiry time (in minutes) [default: "1440"]
+* sm_serverrules_expiry_time - Rules expiry time (in minutes) [default: "10080"]
 
 ### Console Commands
 

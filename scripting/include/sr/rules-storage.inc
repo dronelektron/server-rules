@@ -3,4 +3,4 @@
 #endif
 #define _sr_rules_storage_included
 
-#define RULE_PHRASE_MAX_SIZE 256
+#define RULES_LIST_PATH "translations/server-rules-list.phrases.txt"

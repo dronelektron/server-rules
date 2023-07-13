@@ -10,6 +10,6 @@ bool Variable_ShowRulesOnJoin() {
     return g_showRulesOnJoin.IntValue == 1;
 }
 
-int Variable_GetExpiryTime() {
+int Variable_RulesExpiryTime() {
     return g_rulesExpiryTime.IntValue;
 }

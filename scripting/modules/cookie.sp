@@ -29,7 +29,7 @@ void Cookie_SetRulesShown(int client, const char[] rulesShown) {
 static bool Cookie_IsExpired(int client) {
     int cookieTime = GetClientCookieTime(client, g_rulesCookie);
     int currentTime = GetTime();
-    int expiryTimeInSeconds = Variable_GetExpiryTime() * SECONDS_IN_MINUTE;
+    int expiryTimeInSeconds = Variable_RulesExpiryTime() * SECONDS_IN_MINUTE;
 
     return currentTime - cookieTime > expiryTimeInSeconds;
 }

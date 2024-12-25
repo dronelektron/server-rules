@@ -19,6 +19,10 @@ void Menu_Rules(int client, bool firstTime = true) {
 }
 
 public int MenuHandler_Rules(Menu menu, MenuAction action, int param1, int param2) {
+    PrintToServer("[DEBUG] ==== MenuHandler_Rules ====");
+    PrintToServer("[DEBUG] param1: %d", param1);
+    PrintToServer("[DEBUG] param2: %d", param2);
+
     if (action == MenuAction_Select) {
         if (param2 == CHOICE_EXIT) {
             EmitSoundToClient(param1, SOUND_RULES_EXIT);
@@ -53,7 +57,7 @@ void Menu_AddButtons(Panel panel, int client) {
         Menu_AddItem(panel, CHOICE_BACK, "%T", ITEM_BACK, client);
     }
 
-    bool isNextPageExists = currentPageIndex < (RulesList_Size() - 1) / RULES_PER_PAGE;
+    bool isNextPageExists = (currentPageIndex + 1) < GetPagesAmount();
 
     if (isNextPageExists) {
         Menu_AddItem(panel, CHOICE_NEXT, "%T", ITEM_NEXT, client);
@@ -89,4 +93,14 @@ void Menu_AddItem(Panel panel, int key, const char[] format, any ...) {
 
     panel.CurrentKey = key;
     panel.DrawItem(text);
+}
+
+static int GetPagesAmount() {
+    int rulesAmount = RulesList_Size();
+
+    if (rulesAmount == 0) {
+        return 0;
+    }
+
+    return 1 + (rulesAmount - 1) / RULES_PER_PAGE;
 }

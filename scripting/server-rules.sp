@@ -7,6 +7,7 @@
 #include "server-rules/rules-list"
 #include "server-rules/rules-storage"
 #include "server-rules/sound"
+#include "server-rules/timer"
 #include "server-rules/use-case"
 
 #include "modules/console-command.sp"
@@ -18,6 +19,7 @@
 #include "modules/rules-list.sp"
 #include "modules/rules-storage.sp"
 #include "modules/sound.sp"
+#include "modules/timer.sp"
 #include "modules/use-case.sp"
 
 public Plugin myinfo = {

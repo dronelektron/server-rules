@@ -6,21 +6,5 @@ void UseCase_OnPlayerSpawn(int client) {
         return;
     }
 
-    int userId = GetClientUserId(client);
-
-    CreateTimer(MENU_DELAY_SECONDS, Timer_ShowRules, userId, TIMER_FLAG_NO_MAPCHANGE);
-}
-
-public Action Timer_ShowRules(Handle timer, int userId) {
-    int client = GetClientOfUserId(userId);
-
-    if (client == 0) {
-        return Plugin_Handled;
-    }
-
-    Menu_Rules(client);
-    Cookie_SetRulesShown(client, COOKIE_RULES_SHOWN_YES);
-    EmitSoundToClient(client, SOUND_RULES_OPEN);
-
-    return Plugin_Handled;
+    Timer_ShowRules(client);
 }

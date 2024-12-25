@@ -18,4 +18,4 @@ Server rules for players with translation support
 
 ### Console Commands
 
-* sm_rules - Show panel with translated rules for player
+* sm_rules - Show a menu with rules

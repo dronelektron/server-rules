@@ -8,7 +8,7 @@ void UseCase_OnPlayerSpawn(int client) {
 
     int userId = GetClientUserId(client);
 
-    CreateTimer(MENU_DELAY_SECONDS, Timer_ShowRules, userId);
+    CreateTimer(MENU_DELAY_SECONDS, Timer_ShowRules, userId, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action Timer_ShowRules(Handle timer, int userId) {

@@ -2,12 +2,12 @@
 #include <sdktools>
 #include <clientprefs>
 
-#include "sr/cookie"
-#include "sr/menu"
-#include "sr/rules-list"
-#include "sr/rules-storage"
-#include "sr/sound"
-#include "sr/use-case"
+#include "server-rules/cookie"
+#include "server-rules/menu"
+#include "server-rules/rules-list"
+#include "server-rules/rules-storage"
+#include "server-rules/sound"
+#include "server-rules/use-case"
 
 #include "modules/console-command.sp"
 #include "modules/console-variable.sp"

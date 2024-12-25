@@ -1,7 +1,7 @@
-#if defined _sr_cookie_included
+#if defined _server_rules_cookie_included
  #endinput
 #endif
-#define _sr_cookie_included
+#define _server_rules_cookie_included
 
 #define NULL_CHARACTER '\0'
 

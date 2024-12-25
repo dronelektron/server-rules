@@ -40,7 +40,16 @@ public int MenuHandler_Rules(Menu menu, MenuAction action, int param1, int param
 void Menu_SetFormattedTitle(Panel panel, int client) {
     char title[ITEM_SIZE];
 
-    Format(title, sizeof(title), "%T", "Server rules", client);
+    SetGlobalTransTarget(client);
+
+    if (Variable_ShowPages()) {
+        int currentPage = g_pageIndex[client] + 1;
+        int pagesAmount = GetPagesAmount();
+
+        FormatEx(title, sizeof(title), "%t [%d / %d]", "Server rules", currentPage, pagesAmount);
+    } else {
+        FormatEx(title, sizeof(title), "%t", "Server rules");
+    }
 
     panel.SetTitle(title);
 }

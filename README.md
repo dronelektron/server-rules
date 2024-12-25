@@ -19,6 +19,7 @@ Server rules for players with translation support
 
 * sm_serverrules_show_on_join - Show the menu with rules (On - 1, Off - 0) on the first spaw [default: "1"]
 * sm_serverrules_expiry_time - Rules expiry time (in minutes) [default: "10080"]
+* sm_serverrules_show_pages - Show (On - 1, Off - 0) pages [default: "1"]
 
 ### Console Commands
 

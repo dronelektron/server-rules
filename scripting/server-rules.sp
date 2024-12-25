@@ -2,12 +2,13 @@
 #include <sdktools>
 #include <clientprefs>
 
-#include "sr/cookie"
-#include "sr/menu"
-#include "sr/rules-list"
-#include "sr/rules-storage"
-#include "sr/sound"
-#include "sr/use-case"
+#include "server-rules/cookie"
+#include "server-rules/menu"
+#include "server-rules/rules-list"
+#include "server-rules/rules-storage"
+#include "server-rules/sound"
+#include "server-rules/timer"
+#include "server-rules/use-case"
 
 #include "modules/console-command.sp"
 #include "modules/console-variable.sp"
@@ -18,15 +19,14 @@
 #include "modules/rules-list.sp"
 #include "modules/rules-storage.sp"
 #include "modules/sound.sp"
+#include "modules/timer.sp"
 #include "modules/use-case.sp"
-
-#define AUTO_CREATE_YES true
 
 public Plugin myinfo = {
     name = "Server rules",
     author = "Dron-elektron",
     description = "Server rules for players with translation support",
-    version = "1.0.6",
+    version = "1.1.0",
     url = "https://github.com/dronelektron/server-rules"
 };
 
@@ -39,7 +39,7 @@ public void OnPluginStart() {
     CookieLateLoad();
     LoadTranslations("server-rules-core.phrases");
     LoadTranslations("server-rules-list.phrases");
-    AutoExecConfig(AUTO_CREATE_YES, "server-rules");
+    AutoExecConfig(_, "server-rules");
 }
 
 public void OnMapStart() {

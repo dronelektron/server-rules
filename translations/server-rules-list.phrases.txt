@@ -29,4 +29,94 @@
     {
         "en"    "Test rule #6"
     }
+
+    "Rule 7"
+    {
+        "en"    "Test rule #7"
+    }
+
+    "Rule 8"
+    {
+        "en"    "Test rule #8"
+    }
+
+    "Rule 9"
+    {
+        "en"    "Test rule #9"
+    }
+
+    "Rule 10"
+    {
+        "en"    "Test rule #10"
+    }
+
+    "Rule 11"
+    {
+        "en"    "Test rule #11"
+    }
+
+    "Rule 12"
+    {
+        "en"    "Test rule #12"
+    }
+
+    "Rule 13"
+    {
+        "en"    "Test rule #13"
+    }
+
+    "Rule 14"
+    {
+        "en"    "Test rule #14"
+    }
+
+    "Rule 15"
+    {
+        "en"    "Test rule #15"
+    }
+
+    "Rule 16"
+    {
+        "en"    "Test rule #16"
+    }
+
+    "Rule 17"
+    {
+        "en"    "Test rule #17"
+    }
+
+    "Rule 18"
+    {
+        "en"    "Test rule #18"
+    }
+
+    "Rule 19"
+    {
+        "en"    "Test rule #19"
+    }
+
+    "Rule 20"
+    {
+        "en"    "Test rule #20"
+    }
+
+    "Rule 21"
+    {
+        "en"    "Test rule #21"
+    }
+
+    "Rule 22"
+    {
+        "en"    "Test rule #22"
+    }
+
+    "Rule 23"
+    {
+        "en"    "Test rule #23"
+    }
+
+    "Rule 24"
+    {
+        "en"    "Test rule #24"
+    }
 }

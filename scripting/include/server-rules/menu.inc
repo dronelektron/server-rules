@@ -1,7 +1,7 @@
-#if defined _sr_menu_included
+#if defined _server_rules_menu_included
  #endinput
 #endif
-#define _sr_menu_included
+#define _server_rules_menu_included
 
 #define ITEM_SIZE 256
 #define RULES_PER_PAGE 5
